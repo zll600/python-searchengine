@@ -3,12 +3,13 @@ name = "python-searchengine"
 version = "0.2.0"
 description = "Simple full-text search engine implementation in Python"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.13"
 dependencies = [
     "datasets",
     "PyStemmer",
     "numpy",
     "sentence-transformers",
+    "stop-words>=2025.11.4",
 ]
 
 [dependency-groups]
