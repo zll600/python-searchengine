@@ -13,11 +13,11 @@ class Abstract:
     url: str
 
     @property
-    def fulltext(self):
+    def fulltext(self) -> str:
         return ' '.join([self.title, self.abstract])
 
     def analyze(self):
         self.term_frequencies = Counter(analyze(self.fulltext))
 
-    def term_frequency(self, term):
+    def term_frequency(self, term: str) -> int:
         return self.term_frequencies.get(term, 0)

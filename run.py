@@ -1,8 +1,10 @@
+from collections.abc import Generator
 import logging
 
 from load import load_documents
 from search.index import Index
 from search.timing import timing
+from search.documents import Abstract
 
 logging.basicConfig(level=logging.INFO)
 # set httpx logging to WARNING to reduce noise from API calls
@@ -10,7 +12,7 @@ logging.getLogger("httpx").setLevel(logging.WARNING)
 
 
 @timing
-def index_documents(documents, index):
+def index_documents(documents: tuple[int, Generator[Abstract, None, None]], index: Index) -> Index:
     for document in documents:
         index.index_document(document)
     return index
