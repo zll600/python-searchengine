@@ -1,15 +1,16 @@
 import math
 
 from .analysis import analyze
+from .documents import Abstract
 from .timing import timing
 
 
 class Index:
     def __init__(self):
-        self.index = {}
-        self.documents = {}
+        self.index: dict[str, int] = {}
+        self.documents: dict[int, Abstract] = {}
 
-    def index_document(self, document):
+    def index_document(self, document: Abstract) -> None:
         if document.ID not in self.documents:
             self.documents[document.ID] = document
             document.analyze()
@@ -19,20 +20,20 @@ class Index:
                 self.index[token] = set()
             self.index[token].add(document.ID)
 
-    def document_frequency(self, token):
+    def document_frequency(self, token: str) -> int:
         return len(self.index.get(token, set()))
 
-    def inverse_document_frequency(self, token):
+    def inverse_document_frequency(self, token: str) -> float:
         # Manning, Hinrich and Schütze use log10, so we do too, even though it
         # doesn't really matter which log we use anyway
         # https://nlp.stanford.edu/IR-book/html/htmledition/inverse-document-frequency-1.html
         return math.log10(len(self.documents) / self.document_frequency(token))
 
-    def _results(self, analyzed_query):
+    def _results(self, analyzed_query: str) -> list[int]:
         return [self.index.get(token, set()) for token in analyzed_query]
 
     @timing
-    def search(self, query, search_type='AND', rank=False):
+    def search(self, query: str, search_type='AND', rank=False) -> list[str]:
         """
         Search; this will return documents that contain words from the query,
         and rank them if requested (sets are fast, but unordered).
@@ -58,7 +59,7 @@ class Index:
             return self.rank(analyzed_query, documents)
         return documents
 
-    def rank(self, analyzed_query, documents):
+    def rank(self, analyzed_query: list[str], documents: list[str]) -> list[str]:
         results = []
         if not documents:
             return results

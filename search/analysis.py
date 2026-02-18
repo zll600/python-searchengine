@@ -2,31 +2,29 @@ import re
 import string
 
 import Stemmer
+from stop_words import get_stop_words
 
-# top 25 most common words in English and "wikipedia":
-# https://en.wikipedia.org/wiki/Most_common_words_in_English
-STOPWORDS = set(['the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have',
-                 'i', 'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you',
-                 'do', 'at', 'this', 'but', 'his', 'by', 'from', 'wikipedia'])
+STOP_WORDS = get_stop_words('en')
+
 PUNCTUATION = re.compile('[%s]' % re.escape(string.punctuation))
 STEMMER = Stemmer.Stemmer('english')
 
-def tokenize(text):
+def tokenize(text: str) -> list[str]:
     return text.split()
 
-def lowercase_filter(tokens):
+def lowercase_filter(tokens: list[str]) -> list[str]:
     return [token.lower() for token in tokens]
 
-def punctuation_filter(tokens):
+def punctuation_filter(tokens : list[str]) -> list[str]:
     return [PUNCTUATION.sub('', token) for token in tokens]
 
-def stopword_filter(tokens):
-    return [token for token in tokens if token not in STOPWORDS]
+def stopword_filter(tokens: list[str]) -> list[str]:
+    return [token for token in tokens if token not in STOP_WORDS]
 
-def stem_filter(tokens):
+def stem_filter(tokens: list[str]) -> list[str]:
     return STEMMER.stemWords(tokens)
 
-def analyze(text):
+def analyze(text: str) -> list[str]:
     tokens = tokenize(text)
     tokens = lowercase_filter(tokens)
     tokens = punctuation_filter(tokens)
